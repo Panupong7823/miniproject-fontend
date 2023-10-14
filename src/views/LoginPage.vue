@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <v-card style="height: 100%; width: 100%">
+        <v-card style="height: 100%; width: 100%" color="#121212">
           <v-card-title
             style="font-size: 40px; text-align: center; justify-content: center"
             >Login</v-card-title

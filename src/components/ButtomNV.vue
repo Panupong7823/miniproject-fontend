@@ -19,6 +19,9 @@
       <v-btn fab dark small color="dark" @click="handleAdd">
         <v-icon>mdi-cursor-default</v-icon>
       </v-btn>
+      <v-btn fab dark small color="dark" @click="handleShop">
+        <v-icon>mdi-shopping</v-icon>
+      </v-btn>
       <v-btn fab dark small color="dark" @click="handleLogout">
         <v-icon>mdi-logout</v-icon>
       </v-btn>
@@ -43,6 +46,13 @@ export default {
     handleHome() {
       if (this.$route.path != "/home") {
         this.$router.push({ path: "/home" }).catch(() => {});
+      }
+    },
+    handleShop() {
+      const user = JSON.parse(localStorage.getItem("auth"));
+      const userId = user.userID;
+      if (this.$route.path != `/listproduct/${userId}`) {
+        this.$router.push({ path: `/listproduct/${userId}` }).catch(() => {});
       }
     },
     handleAdd() {

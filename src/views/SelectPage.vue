@@ -1,6 +1,6 @@
 <template>
-  <v-app>
-    <v-card style="height: 100%; width: 100%">
+
+    <v-card style="height: 100%; width: 100%" color="#121212">
       <v-card :loading="loading" class="mx-auto my-12" max-width="600">
         <v-row>
           <v-card class="mx-auto" max-width="600">
@@ -27,20 +27,20 @@
           </v-btn>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="deep-purple lighten-2" text @click="reserve">
-            confirm
+          <v-btn color="deep-purple lighten-2" text @click="confirmBooking">
+            Confirm
           </v-btn>
-          <v-btn color="deep-purple lighten-2" text @click="cancel">
-            cancel
+          <v-btn color="deep-purple lighten-2" text @click="cancelBooking">
+            Cancel
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-card>
-  </v-app>
 </template>
 
 <script>
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   data() {
@@ -53,14 +53,15 @@ export default {
         detail: "",
       },
       quantity: 0,
+      status: "1",
     };
   },
   created() {
-    this.ProductDetails();
+    this.getProductDetails();
   },
 
   methods: {
-    ProductDetails() {
+    getProductDetails() {
       const productId = this.$route.params.productid;
       axios
         .get(`http://localhost:9009/Product/${productId}`)
@@ -74,10 +75,50 @@ export default {
     getImageUrl(photoData) {
       return `data:image/jpeg;base64,${photoData}`;
     },
-    reserve() {
-      this.updatePieceOnServer(this.quantity);
+    confirmBooking() {
+      if (this.quantity > 0) {
+        const user = JSON.parse(localStorage.getItem("auth"));
+        const userId = user.userID;
+        const bookingData = {
+          user: { userID: userId },
+          product: { productid: this.card.productid },
+          quantity: this.quantity,
+          status: this.status
+        };
+        this.createBooking(bookingData);
+      } else {
+        console.warn("Quantity must be greater than 0 to make a booking.");
+      }
     },
-    cancel() {
+    createBooking(bookingData) {
+      axios
+        .post("http://localhost:9009/book", bookingData)
+        .then((response) => {
+            Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Booking Success",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          this.updateProductPiece(this.quantity);
+          this.$router.push("/home");
+        })
+        .catch((error) => {
+          console.error("Error creating booking:", error);
+        });
+    },
+    updateProductPiece(change) {
+      const productId = this.$route.params.productid;
+      axios
+        .put(`http://localhost:9009/Product/Piece/${productId}`, {
+          change: change,
+        })
+        .catch((error) => {
+          console.error("Error updating product piece:", error);
+        });
+    },
+    cancelBooking() {
       this.$router.push("/home");
     },
     increaseQuantity() {
@@ -88,19 +129,6 @@ export default {
     decreaseQuantity() {
       if (this.quantity > 0) {
         this.quantity--;
-      }
-    },
-    async updatePieceOnServer(change) {
-      const productId = this.$route.params.productid;
-      const user = JSON.parse(localStorage.getItem("auth"));
-      const userId = user.userID; // ดึงเฉพาะ userID
-      try {
-        await axios.put(`http://localhost:9009/Product/Piece/${productId}`, {
-          change: change,
-          userId: userId, // ส่งเฉพาะ userID
-        });
-      } catch (error) {
-        console.error("Error updating product piece:", error);
       }
     },
   },

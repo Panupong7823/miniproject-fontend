@@ -1,8 +1,10 @@
 <template>
   <v-app>
     <Bar />
+    <v-main>
       <router-view />
       <ButtomNV v-if="isShow" />
+    </v-main>
     <Footer />
   </v-app>
 </template>

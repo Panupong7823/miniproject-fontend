@@ -7,6 +7,7 @@ import RegisterPage from'../views/RegisterPage.vue'
 import AddressPage from '../views/AddressPage.vue'
 import ManageUserPage from '../views/ManageUserPage.vue'
 import AddProductPage from '../views/AddProductPage'
+import ListProductPage from '../views/ListProductPage'
 
 Vue.use(VueRouter)
 
@@ -38,6 +39,10 @@ const routes = [
   {
     path: '/addproduct', 
     component: AddProductPage
+  },
+  {
+    path: '/listproduct/:userID', 
+    component: ListProductPage
   },
 
 ]
