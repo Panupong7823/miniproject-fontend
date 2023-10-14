@@ -106,8 +106,8 @@ export default {
       }
     },
     selectedCardsCount() {
-      const count = this.selectedCardIds.length; // นับจำนวนการ์ดที่ถูกเลือก
-      console.log("จำนวนการ์ดที่เลือก:", count); // แสดงค่าในคอนโซล
+      const count = this.selectedCardIds.length; 
+      console.log("จำนวนการ์ดที่เลือก:", count); 
       return count;
     },
   },
