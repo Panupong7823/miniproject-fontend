@@ -1,37 +1,41 @@
 <template>
    <v-carousel
     cycle
-    height="500"
+    height="600px"
     width="100%"
     hide-delimiters
     show-arrows-on-hover :show-arrows="false"
   >
     <v-carousel-item
-      v-for="(item,i) in items"
+      v-for="(item, i) in products"
       :key="i"
-      :src="item.src"
+      :src="getImageUrl(item.photoData)"
     ></v-carousel-item>
   </v-carousel>
 </template>
 <script>
-  export default {
-    data () {
-      return {
-        items: [
-         {
-            src: 'https://dotesports.com/wp-content/uploads/2023/05/Dot-Esports-Image-2023-05-01T015930.309.jpg',
-          },
-          {
-            src: 'https://www.pcinvasion.com/wp-content/uploads/2023/08/Kafka-honkai-star-rail-e1691528930553.png?fit=1200%2C675',
-          },
-          {
-            src: 'https://www.pockettactics.com/wp-content/sites/pockettactics/2023/01/honkai-star-rail-kafka-5.jpg',
-          },
-          {
-            src: 'https://www.gameskinny.com/wp-content/uploads/2023/05/honkai-star-rail-beat-kafka-guide.jpg?w=1200',
-          },
-        ],
+import axios from 'axios';
+
+export default {
+  data () {
+    return {
+      products: [],
+    };
+  },
+  created() {
+    this.Products();
+  },
+  methods: {
+    async Products() {
+      try {
+        const response = await axios.get('http://localhost:9009/Product');
+        this.products = response.data;
+      } catch (error) {
+        console.error('Error fetching products:', error);
       }
+    }, getImageUrl(photoData) {
+      return `data:image/jpeg;base64,${photoData}`;
     },
-  }
+  },
+};
 </script>

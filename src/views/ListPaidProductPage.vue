@@ -7,7 +7,7 @@
         style="font-size: 52px; text-align: center; justify-content: center"
         >History</v-card-title
       >
-      <v-col cols="12" v-for="card in cards" :key="card.reviewID">
+      <v-col cols="12" v-for="card in visibleCards" :key="card.reviewID">
         <v-container>
           <v-card
             :class="{ 'selected-card': isSelected(card.reviewID) }"
@@ -28,7 +28,12 @@
                   card.product.productname
                 }}</v-card-title>
                 <v-card-subtitle>{{ card.product.detail }}</v-card-subtitle>
-                <v-card-title>{{ formatTime(card.date_book) }} </v-card-title>
+                <v-card-title style="padding-bottom: 0"
+                  >Order Date : {{ formatTime(card.date_book) }}
+                </v-card-title>
+                <v-card-title style="padding-bottom: 0"
+                  >Receive Date : {{ formatTime(card.date_reciept) }}
+                </v-card-title>
                 <v-card-title style="padding-bottom: 0">
                   Amount {{ card.quantity.toLocaleString() }} piece
                 </v-card-title>
@@ -45,6 +50,21 @@
         </v-container>
       </v-col>
     </v-row>
+    <div class="text-center">
+      <v-container>
+        <v-row justify="center">
+          <v-col cols="4">
+            <v-container class="max-width">
+              <v-pagination
+                v-model="page"
+                class="my-4"
+                :length="totalPages"
+              ></v-pagination>
+            </v-container>
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
   </v-container>
 </template>
 <script>
@@ -66,6 +86,8 @@ export default {
       selectedCardId: [],
       loader: null,
       loading: false,
+      page: 1,
+      itemsPerPage: 4,
     };
   },
   computed: {
@@ -73,6 +95,14 @@ export default {
       return this.cards.filter((card) =>
         this.selectedCardId.includes(card.reviewID)
       );
+    },
+    totalPages() {
+      return Math.ceil(this.cards.length / this.itemsPerPage);
+    },
+    visibleCards() {
+      const startIndex = (this.page - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.cards.slice(startIndex, endIndex);
     },
   },
   watch: {
@@ -128,14 +158,21 @@ export default {
       return `data:image/jpeg;base64,${photoData}`;
     },
     formatTime(timestamp) {
-      const date = new Date(timestamp);
-      const formattedDate = `${getDate(date)}/${getMonth(date) + 1}/${getYear(
-        date
-      )}`;
-      const formattedTime = `${getHours(date)}:${getMinutes(date)}:${getSeconds(
-        date
-      )}`;
-      return `Date: ${formattedDate} Time: ${formattedTime}`;
+      if (timestamp === null) {
+        return "Please wait for day you receive product.";
+      } else {
+        const date = new Date(timestamp);
+        const formattedDate = `${getDate(date)}/${getMonth(date) + 1}/${getYear(
+          date
+        )}`;
+        const formattedTime = `${String(getHours(date)).padStart(
+          2,
+          "0"
+        )}:${String(getMinutes(date)).padStart(2, "0")}:${String(
+          getSeconds(date)
+        ).padStart(2, "0")}`;
+        return `Date: ${formattedDate} Time: ${formattedTime}`;
+      }
     },
     isSelected(reviewID) {
       return this.selectedCardId.includes(reviewID);

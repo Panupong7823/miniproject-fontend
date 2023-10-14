@@ -22,6 +22,10 @@
       <v-btn fab dark small color="dark" @click="handleShop">
         <v-icon>mdi-shopping</v-icon>
       </v-btn>
+      <v-btn fab dark small color="dark" @click="handleHistory">
+        <v-icon>mdi-clipboard-text</v-icon>
+      </v-btn>
+
       <v-btn fab dark small color="dark" @click="handleLogout">
         <v-icon>mdi-logout</v-icon>
       </v-btn>
@@ -53,6 +57,13 @@ export default {
       const userId = user.userID;
       if (this.$route.path != `/listproduct/${userId}`) {
         this.$router.push({ path: `/listproduct/${userId}` }).catch(() => {});
+      }
+    },
+     handleHistory() {
+      const user = JSON.parse(localStorage.getItem("auth"));
+      const userId = user.userID;
+      if (this.$route.path != `/listpaid/${userId}`) {
+        this.$router.push({ path: `/listpaid/${userId}` }).catch(() => {});
       }
     },
     handleAdd() {

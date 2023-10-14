@@ -3,17 +3,41 @@
     <Slide />
     <br /><br />
     <v-row>
-      <v-col v-for="(card, index) in cards" :key="index" cols="12" md="4">
+      <v-col
+        v-for="(card, index) in visibleCards"
+        :key="index"
+        cols="12"
+        md="4"
+      >
         <v-card
           class="mx-auto"
           max-width="344"
-          @click="navigateToSelectPage(card)"
+          @click="card.piece !== 0 && navigateToSelectPage(card)"
+          :class="{ unavailable: card.piece === 0 }"
         >
           <v-img :src="getImageUrl(card.photoData)" height="200px"></v-img>
           <v-card-title>{{ card.productname }}</v-card-title>
+          <v-card-subtitle v-if="card.piece === 0"
+            >Out of Stock</v-card-subtitle
+          >
         </v-card>
       </v-col>
     </v-row>
+    <div class="text-center">
+      <v-container>
+        <v-row justify="center">
+          <v-col cols="4">
+            <v-container class="max-width">
+              <v-pagination
+                v-model="page"
+                class="my-4"
+                :length="totalPages"
+              ></v-pagination>
+            </v-container>
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
   </v-container>
 </template>
 
@@ -27,7 +51,19 @@ export default {
   data() {
     return {
       cards: [],
+      page: 1,
+      itemsPerPage: 9,
     };
+  },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.cards.length / this.itemsPerPage);
+    },
+    visibleCards() {
+      const startIndex = (this.page - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.cards.slice(startIndex, endIndex);
+    },
   },
   methods: {
     async ProductData() {
@@ -52,3 +88,11 @@ export default {
   },
 };
 </script>
+<style>
+.unavailable {
+  opacity: 0.5; 
+  cursor: not-allowed;
+  filter: grayscale(100%);
+}
+</style>
+

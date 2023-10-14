@@ -31,7 +31,9 @@ const routes = [
   },
   {
     path: '/address', 
+    name: 'address',
     component: AddressPage
+    
   },
   {
     path: '/manage', 
