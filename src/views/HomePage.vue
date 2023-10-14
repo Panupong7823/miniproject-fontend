@@ -19,7 +19,6 @@
 
 <script>
 import Slide from "../components/Slide.vue";
-import axios from "axios";
 
 export default {
   components: {
@@ -30,19 +29,14 @@ export default {
       cards: [],
     };
   },
-  mounted() {
-    this.ProductData();
-  },
   methods: {
-    ProductData() {
-      axios
-        .get("http://localhost:9009/Product")
-        .then((response) => {
-          this.cards = response.data;
-        })
-        .catch((error) => {
-          console.error("Error fetching product data:", error);
-        });
+    async ProductData() {
+      try {
+        const response = await this.axios.get("http://localhost:9009/Product");
+        this.cards = response.data;
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
     },
     navigateToSelectPage(card) {
       this.$router.push({
@@ -52,6 +46,9 @@ export default {
     getImageUrl(photoData) {
       return `data:image/jpeg;base64,${photoData}`;
     },
+  },
+  created() {
+    this.ProductData();
   },
 };
 </script>

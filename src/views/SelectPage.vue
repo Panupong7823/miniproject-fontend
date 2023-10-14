@@ -39,7 +39,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import Swal from "sweetalert2";
 
 export default {
@@ -56,21 +55,19 @@ export default {
       status: "1",
     };
   },
-  created() {
-    this.getProductDetails();
+  async created() {
+    await this.getProductDetails();
   },
 
   methods: {
-    getProductDetails() {
+    async getProductDetails() {
       const productId = this.$route.params.productid;
-      axios
-        .get(`http://localhost:9009/Product/${productId}`)
-        .then((response) => {
-          this.card = response.data;
-        })
-        .catch((error) => {
-          console.error("Error fetching product details:", error);
-        });
+      try {
+        const response = await this.axios.get(`http://localhost:9009/Product/${productId}`);
+        this.card = response.data;
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      }
     },
     getImageUrl(photoData) {
       return `data:image/jpeg;base64,${photoData}`;
@@ -90,33 +87,31 @@ export default {
         console.warn("Quantity must be greater than 0 to make a booking.");
       }
     },
-    createBooking(bookingData) {
-      axios
-        .post("http://localhost:9009/book", bookingData)
-        .then((response) => {
-            Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Booking Success",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          this.updateProductPiece(this.quantity);
-          this.$router.push("/home");
-        })
-        .catch((error) => {
-          console.error("Error creating booking:", error);
+    async createBooking(bookingData) {
+      try {
+        const response = await this.axios.post("http://localhost:9009/book", bookingData);
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Booking Success",
+          showConfirmButton: false,
+          timer: 1500,
         });
+        this.updateProductPiece(this.quantity);
+        this.$router.push("/home");
+      } catch (error) {
+        console.error("Error creating booking:", error);
+      }
     },
-    updateProductPiece(change) {
+    async updateProductPiece(change) {
       const productId = this.$route.params.productid;
-      axios
-        .put(`http://localhost:9009/Product/Piece/${productId}`, {
+      try {
+        await this.axios.put(`http://localhost:9009/Product/Piece/${productId}`, {
           change: change,
-        })
-        .catch((error) => {
-          console.error("Error updating product piece:", error);
         });
+      } catch (error) {
+        console.error("Error updating product piece:", error);
+      }
     },
     cancelBooking() {
       this.$router.push("/home");

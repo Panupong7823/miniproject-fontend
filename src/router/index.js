@@ -8,6 +8,7 @@ import AddressPage from '../views/AddressPage.vue'
 import ManageUserPage from '../views/ManageUserPage.vue'
 import AddProductPage from '../views/AddProductPage'
 import ListProductPage from '../views/ListProductPage'
+import ListPaidProductPage from '../views/ListPaidProductPage'
 
 Vue.use(VueRouter)
 
@@ -44,7 +45,10 @@ const routes = [
     path: '/listproduct/:userID', 
     component: ListProductPage
   },
-
+  {
+    path: '/listpaid/:userID', 
+    component: ListPaidProductPage
+  },
 ]
 
 const router = new VueRouter({
