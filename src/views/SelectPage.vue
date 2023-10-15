@@ -97,20 +97,9 @@ export default {
           showConfirmButton: false,
           timer: 1500,
         });
-        this.updateProductPiece(this.quantity);
         this.$router.push("/home");
       } catch (error) {
         console.error("Error creating booking:", error);
-      }
-    },
-    async updateProductPiece(change) {
-      const productId = this.$route.params.productid;
-      try {
-        await this.axios.put(`http://localhost:9009/Product/Piece/${productId}`, {
-          change: change,
-        });
-      } catch (error) {
-        console.error("Error updating product piece:", error);
       }
     },
     cancelBooking() {

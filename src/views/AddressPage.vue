@@ -66,8 +66,27 @@ export default {
     this.selectedIds = this.$route.params.selectedIds;
     this.totalCardValue = this.$route.params.totalCardValue;
     console.log(this.selectedIds);
+    this.DataBookings();
   },
   methods: {
+    async DataBookings() {
+      try {
+        const response = await this.axios.get(
+          `http://localhost:9009/book/${this.selectedIds}`
+        );
+        this.bookings = response.data;
+        console.log("Response", response.data);
+        
+        this.bookings.forEach((booking) => {
+          const quantity = booking.quantity;
+          const productid = booking.product.productid;
+          console.log(`Quantity: ${quantity}, Product ID: ${productid}`);
+        });
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      }
+    },
+
     async updateBookingStatus() {
       const selectedReviewID = this.selectedIds
         .split(",")
@@ -87,6 +106,15 @@ export default {
               .push({ path: `/listproduct/${userId}` })
               .catch(() => {});
             console.log(response.data);
+
+            this.bookings.forEach((booking) => {
+              const quantity = booking.quantity;
+              const productId = booking.product.productid;
+              if (quantity !== null) {
+                this.updateProductPiece(productId, quantity);
+              }
+            });
+
             this.loading = false;
           })
           .catch((error) => {
@@ -95,6 +123,18 @@ export default {
           });
       } else {
         console.error("selectedReviewID is not an array.");
+      }
+    },
+    async updateProductPiece(productId, quantity) {
+      try {
+        await this.axios.put(
+          `http://localhost:9009/Product/Piece/${productId}`,
+          {
+            change: quantity,
+          }
+        );
+      } catch (error) {
+        console.error("Error updating product piece:", error);
       }
     },
   },

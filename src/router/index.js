@@ -9,6 +9,8 @@ import ManageUserPage from '../views/ManageUserPage.vue'
 import AddProductPage from '../views/AddProductPage'
 import ListProductPage from '../views/ListProductPage'
 import ListPaidProductPage from '../views/ListPaidProductPage'
+import HomeAdminPage from '../views/HomeAdminPage'
+import EditProductPage from '../views/EditProductPage'
 
 Vue.use(VueRouter)
 
@@ -18,8 +20,16 @@ const routes = [
     component: HomePage 
   },
   {
+    path: '/home/admin', 
+    component: HomeAdminPage 
+  },
+  {
     path: '/select/:productid', 
     component: SelectPage,
+  },
+  {
+    path: '/edit/:productid', 
+    component: EditProductPage,
   },
   {
     path: '/', 
@@ -36,7 +46,7 @@ const routes = [
     
   },
   {
-    path: '/manage', 
+    path: '/manage/:userID', 
     component: ManageUserPage
   },
   {

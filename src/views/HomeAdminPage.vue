@@ -1,7 +1,5 @@
 <template>
   <v-container>
-    <Slide />
-    <br /><br />
     <v-text-field
       v-model="searchTerm"
       label="Search"
@@ -18,7 +16,7 @@
         <v-card
           class="mx-auto"
           max-width="344"
-          @click="card.piece !== 0 && navigateToSelectPage(card)"
+          @click="navigateToSelectPage(card)"
           :class="{ unavailable: card.piece === 0 }"
         >
           <v-img :src="getImageUrl(card.photoData)" height="200px"></v-img>
@@ -48,12 +46,10 @@
 </template>
 
 <script>
-import Slide from "../components/Slide.vue";
+
 
 export default {
-  components: {
-    Slide,
-  },
+  
   data() {
     return {
       cards: [],
@@ -80,7 +76,7 @@ export default {
     },
     navigateToSelectPage(card) {
       this.$router.push({
-        path: `/select/${card.productid}`,
+        path: `/edit/${card.productid}`,
       });
     },
     getImageUrl(photoData) {

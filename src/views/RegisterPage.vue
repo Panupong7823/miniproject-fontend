@@ -52,6 +52,18 @@
                 required
                 outlined
               ></v-text-field>
+              <v-text-field
+                v-model="address"
+                label="address"
+                required
+                outlined
+              ></v-text-field>
+              <v-text-field
+                v-model="province"
+                label="Province"
+                required
+                outlined
+              ></v-text-field>
               <v-btn
                 :disabled="!valid"
                 color="dark"
@@ -80,6 +92,8 @@ export default {
       firstname: "",
       lastname: "",
       tel: "",
+      address: "",
+      province: "",
       nameRules: [
         (v) => !!v || "Please enter your username.",
         (v) =>
@@ -105,6 +119,8 @@ export default {
               firstname: this.firstname,
               lastname: this.lastname,
               tel: this.tel,
+              address: this.address,
+              province: this.province,
               userType: "1",
             }
           );

@@ -2,234 +2,167 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <div>
-          <v-data-table
-            :headers="headers"
-            :items="userList"
-            sort-by="calories"
-            class="elevation-1"
+        <v-card style="height: 100%; width: 100%">
+          <v-card-title
+            style="font-size: 40px; text-align: center; justify-content: center"
+            >Edit User</v-card-title
           >
-            <template v-slot:top>
-              <v-toolbar flat>
-                <v-toolbar-title>User</v-toolbar-title>
-                <v-divider class="mx-4" inset vertical></v-divider>
-                <v-spacer></v-spacer>
-              </v-toolbar>
-            </template>
-            <template v-slot:[`item.actions`]="{ item }">
-              <v-icon small class="mr-2" @click="openDialog('edit', item)">
-                mdi-pencil
-              </v-icon>
-              <v-icon small @click="deleteItem(item)" class="ml-2">
-                mdi-delete
-              </v-icon>
-            </template>
-            <template v-slot:no-data>
-              <v-btn color="primary" @click="initialize"> Reset </v-btn>
-            </template>
-          </v-data-table>
-          <v-dialog v-model="dialog" max-width="500px">
-            <v-card>
-              <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
-              </v-card-title>
-
-              <v-card-text>
-                <v-container>
-                  <v-row style="margin-top: 10px">
-                    <v-col cols="12" sm="6" md="6">
-                      <v-text-field
-                        v-model="firstname"
-                        label="Firstname"
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-text-field
-                        v-model="lastname"
-                        label="Lastname"
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-text-field
-                        v-model="username"
-                        label="Username"
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-text-field
-                        v-model="tel"
-                        label="Telephone"
-                        outlined
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="save(formTitle)">
-                  Save
-                </v-btn>
-                <v-btn color="blue darken-1" text @click="close">
-                  Cancel
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-          <v-dialog v-model="dialogDelete" max-width="500px">
-            <v-card>
-              <v-card-title class="text-h5"
-                >Are you sure you want to delete this item?</v-card-title
+          <v-card-text>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-text-field
+                v-model="firstname"
+                label="Firstname"
+                required
+                outlined
+              ></v-text-field>
+              <v-text-field
+                v-model="lastname"
+                label="Lastname"
+                required
+                outlined
+              ></v-text-field>
+              <v-text-field
+                v-model="tel"
+                label="Telephone"
+                required
+                outlined
+              ></v-text-field>
+              <v-text-field
+                v-model="username"
+                :rules="nameRules"
+                label="username"
+                placeholder="username"
+                required
+                outlined
+              ></v-text-field>
+              <v-text-field
+                v-model="password"
+                :rules="passwordRules"
+                label="password"
+                placeholder="password"
+                type="password"
+                required
+                outlined
+              ></v-text-field>
+              <v-text-field
+                v-model="address"
+                label="address"
+                required
+                outlined
+                v-if="userType !== '0'"
+              ></v-text-field>
+              <v-text-field
+                v-model="province"
+                label="Province"
+                required
+                outlined
+                v-if="userType !== '0'"
+              ></v-text-field>
+              <v-btn
+                :disabled="!valid"
+                color="dark"
+                class="mr-4"
+                block
+                @click="validate"
+                style="display: flex; justify-content: center"
               >
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="closeDelete"
-                  >Cancel</v-btn
-                >
-                <v-btn color="blue darken-1" text @click="deleteItemConfirm"
-                  >OK</v-btn
-                >
-                <v-spacer></v-spacer>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </div>
+                confirm
+              </v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
 <script>
 export default {
-  data: () => ({
-    userList: [],
-    firstname: "",
-    lastname: "",
-    username: "",
-    tel: "",
-    password:"",
-    dialog: false,
-    dialogDelete: false,
-    headers: [
-      { text: "Firstname", value: "firstname" },
-      { text: "Lastname", value: "lastname" },
-      { text: "Telephone", value: "tel" },
-      { text: "Actions", value: "actions", sortable: false },
-    ],
+  data() {
+    return {
+      valid: true,
+      username: "",
+      password: "",
+      confirmPassword: "",
+      firstname: "",
+      lastname: "",
+      tel: "",
+      address: "",
+      province: "",
 
-    desserts: [],
-    editedIndex: -1,
-    editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
-    },
-    defaultItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
-    },
-    formTitle: "",
-    IdUser: "",
-    IdForDelete:''
-  }),
+      nameRules: [
+        (v) => !!v || "Please enter your username.",
+        (v) =>
+          (v && v.length >= 4) ||
+          "Please enter your username, must not exceed 4 characters.",
+      ],
+     
+      passwordRules: [(v) => !!v || "Please enter your new password"],
 
-  watch: {
-    dialog(val) {
-      val || this.close();
-    },
-    dialogDelete(val) {
-      val || this.closeDelete();
-    },
+      user: null,
+      userType: null,
+    };
   },
 
   created() {
-    this.initialize();
+    const userData = JSON.parse(localStorage.getItem("auth"));
+    const userId = userData.userID;
+    this.getUserById(userId);
+    if (userData) {
+      this.userType = userData.userType;
+    }
   },
 
   methods: {
-    async initialize() {
-      this.userList = [];
-      try {
-        const data = await this.axios.get("http://localhost:9009/user");
-        console.log("user", data);
-        this.userList = data.data;
-      } catch (error) {}
-    },
+    async validate() {
+      if (this.$refs.form.validate()) {
+        try {
+          const userData = {
+            username: this.username,
+            password: this.password,
+            firstname: this.firstname,
+            lastname: this.lastname,
+            tel: this.tel,
+            address: this.address,
+            province: this.province,
+            userType: "1",
+          };
 
-    editItem(item) {
-      console.log("item select", item);
-      this.editedIndex = this.employeeItem.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-    },
+          const response = await this.axios.put(
+            `http://localhost:9009/user/${this.user.userID}`,
+            userData
+          );
 
-    deleteItem(item) {
-      this.idforDelete = item.userID;
-      this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
-      this.closeDelete();
-    },
-
-    close() {
-      this.dialog = false;
-      this.firstname = "";
-      this.lastname = "";
-      this.username = "";
-      this.tel = "";
-      
-    },
-
-    closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-    openDialog(Actions, item) {
-      this.formTitle = "";
-      if (Actions === "edit") {
-        this.formTitle = "edit";
-        this.dialog = true;
-        this.firstname = item.firstname;
-        this.lastname = item.lastname;
-        this.username = item.username;
-        this.tel = item.tel;
-        this.IdUser = item.userID;
-        this.password = item.password;
+          if (response.status === 200) {
+            this.$router.push("/");
+          } else {
+            this.$toast.error("Update failed. Please try again.");
+          }
+        } catch (error) {
+          console.error(error);
+          this.$toast.error("An error occurred. Please try again later.");
+        }
       }
     },
 
-    async save(action) {
-      var data = {
-        firstname: this.firstname,
-        lastname: this.lastname,
-        username: this.username,
-        tel: this.tel,
-        password:this.password
-      };
-      if (action === "edit") {
-        try {
-          var dataResponse = await this.axios.put(
-            "http://localhost:9009/user/" + this.IdUser,
-            data
-          );
-          console.log("dataResponse ====>", dataResponse);
-          this.close();
-          this.initialize();
-        } catch (error) {
-          console.log(error.message);
-        }
+    async getUserById(userId) {
+      try {
+        const response = await this.axios.get(
+          `http://localhost:9009/user/${userId}`
+        );
+        this.user = response.data;
+
+        this.username = this.user.username;
+        this.password = this.user.password;
+        this.firstname = this.user.firstname;
+        this.lastname = this.user.lastname;
+        this.tel = this.user.tel;
+        this.address = this.user.address;
+        this.province = this.user.province;
+      } catch (error) {
+        console.error(error);
+        this.$toast.error(
+          "An error occurred while fetching the user. Please try again later."
+        );
       }
     },
   },

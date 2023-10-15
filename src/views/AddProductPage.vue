@@ -109,7 +109,7 @@ export default {
         console.log("FormData content:", data);
 
         if (response.status === 201) {
-          this.$router.push("/home");
+          this.$router.push("/home/admin");
           Swal.fire({
             position: "top-end",
             icon: "success",

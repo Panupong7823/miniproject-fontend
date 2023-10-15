@@ -305,7 +305,6 @@ export default {
         priceProvice = 10;
       } else {
         priceProvice = 30;
-        return;
       }
 
       const totalWithoutProvice = this.cards
@@ -325,7 +324,6 @@ export default {
         priceProvice = 10;
       } else {
         priceProvice = 30;
-        return;
       }
       const totalProvice = priceProvice;
       return totalProvice;

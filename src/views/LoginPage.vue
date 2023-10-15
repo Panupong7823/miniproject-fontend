@@ -80,7 +80,13 @@ export default {
           if (response.status === 200) {
             localStorage.setItem("auth", JSON.stringify(response.data));
             this.$EventBus.$emit("getAuth");
-            this.$router.push("/home");
+            const userData = JSON.parse(localStorage.getItem("auth"));
+            const userType = userData.userType;
+            if (userType === "1") {
+              this.$router.push("/home");
+            } else if (userType === "0") {
+              this.$router.push("/home/admin");
+            }
             window.location.reload();
           } else if (response.status === 401) {
             console.error("Incorrect login information.");
