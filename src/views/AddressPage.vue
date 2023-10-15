@@ -76,7 +76,7 @@ export default {
         );
         this.bookings = response.data;
         console.log("Response", response.data);
-        
+
         this.bookings.forEach((booking) => {
           const quantity = booking.quantity;
           const productid = booking.product.productid;
@@ -103,7 +103,7 @@ export default {
           .put(`http://localhost:9009/book/${userId}`, request)
           .then((response) => {
             this.$router
-              .push({ path: `/listproduct/${userId}` })
+              .push({ path: `/listpaid/${userId}` })
               .catch(() => {});
             console.log(response.data);
 

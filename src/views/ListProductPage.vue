@@ -312,7 +312,7 @@ export default {
       let priceProvice = 0;
       console.log("province", province);
 
-      if (province === "songkhla") {
+      if (province === "songkhla" || province === "Songkhla" ) {
         priceProvice = 10;
       } else {
         priceProvice = 30;
@@ -331,7 +331,7 @@ export default {
       const user = JSON.parse(localStorage.getItem("auth"));
       const province = user.province;
       let priceProvice = 0;
-      if (province === "songkhla") {
+      if (province === "songkhla" || province === "Songkhla" ) {
         priceProvice = 10;
       } else {
         priceProvice = 30;

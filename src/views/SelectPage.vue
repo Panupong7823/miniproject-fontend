@@ -1,5 +1,4 @@
 <template>
-
     <v-card style="height: 100%; width: 100%" color="#121212">
       <v-card :loading="loading" class="mx-auto my-12" max-width="600">
         <v-row>

@@ -128,8 +128,6 @@ export default {
       this.product.photo = file;
     },
     showErrorToast(message) {
-      // เพิ่มฟังก์ชันแสดง Toast ผิดพลาดที่คุณต้องการในนี้
-      // ตัวอย่าง: แสดง toast ด้วย Swal
       Swal.fire({
         icon: "error",
         title: "Error",

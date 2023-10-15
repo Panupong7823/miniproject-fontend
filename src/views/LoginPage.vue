@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import axios from "axios";
 
 export default {
   data: () => ({
@@ -72,7 +71,7 @@ export default {
         };
 
         try {
-          const response = await axios.post(
+          const response = await this.axios.post(
             "http://localhost:9009/login",
             userData
           );
