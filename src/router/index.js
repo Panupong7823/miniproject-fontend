@@ -11,6 +11,7 @@ import ListProductPage from '../views/ListProductPage'
 import ListPaidProductPage from '../views/ListPaidProductPage'
 import HomeAdminPage from '../views/HomeAdminPage'
 import EditProductPage from '../views/EditProductPage'
+import SelectRecieptPage from '../views/SelectRecieptPage'
 
 Vue.use(VueRouter)
 
@@ -43,6 +44,11 @@ const routes = [
     path: '/address', 
     name: 'address',
     component: AddressPage
+    
+  },
+  {
+    path: '/reciept', 
+    component: SelectRecieptPage
     
   },
   {

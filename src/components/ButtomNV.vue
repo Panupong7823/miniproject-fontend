@@ -29,11 +29,33 @@
         dark
         class="custom-button"
         color="dark"
+        @click="handleHomeAdmin"
+        v-if="userType !== '1'"
+      >
+        <v-icon>mdi-home</v-icon>
+        home
+      </v-btn>
+      <v-btn
+        block
+        dark
+        class="custom-button"
+        color="dark"
         @click="handleAdd"
         v-if="userType !== '1'"
       >
         <v-icon>mdi-cursor-default</v-icon>
         increase
+      </v-btn>
+      <v-btn
+        block
+        dark
+        class="custom-button"
+        color="dark"
+        @click="handleReview"
+        v-if="userType !== '1'"
+      >
+        <v-icon> mdi-calendar-multiple</v-icon>
+        Schedule 
       </v-btn>
       <v-btn
         block
@@ -106,6 +128,16 @@ export default {
     handleHome() {
       if (this.$route.path != "/home") {
         this.$router.push({ path: "/home" }).catch(() => {});
+      }
+    },
+    handleHomeAdmin() {
+      if (this.$route.path != "/home/admin") {
+        this.$router.push({ path: "/home/admin" }).catch(() => {});
+      }
+    },
+      handleReview() {
+      if (this.$route.path != "/reciept") {
+        this.$router.push({ path: "/reciept" }).catch(() => {});
       }
     },
     handleShop() {

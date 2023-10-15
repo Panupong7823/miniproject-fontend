@@ -32,7 +32,7 @@
                   >Order Date : {{ formatTime(card.date_book) }}
                 </v-card-title>
                 <v-card-title style="padding-bottom: 0"
-                  >Receive Date : {{ formatTime(card.date_reciept) }}
+                  >Receive Date : {{ formatTimeReview(card.date_reciept) }}
                 </v-card-title>
                 <v-card-title style="padding-bottom: 0">
                   Amount {{ card.quantity.toLocaleString() }} piece
@@ -172,6 +172,17 @@ export default {
           getSeconds(date)
         ).padStart(2, "0")}`;
         return `Date: ${formattedDate} Time: ${formattedTime}`;
+      }
+    },
+    formatTimeReview(timestamp) {
+      if (timestamp === null) {
+        return "Please wait for the day you receive the product.";
+      } else {
+        const date = new Date(timestamp);
+        const formattedDate = `${getDate(date)}/${getMonth(date) + 1}/${getYear(
+          date
+        )}`;
+        return `Date: ${formattedDate}`;
       }
     },
     isSelected(reviewID) {

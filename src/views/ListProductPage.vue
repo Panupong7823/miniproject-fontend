@@ -31,9 +31,9 @@
                   <v-card-subtitle>{{ card.product.detail }}</v-card-subtitle>
                   <v-card-title style="padding-bottom: 0"
                     >Order Date : {{ formatTime(card.date_book) }}
-                  </v-card-title > 
+                  </v-card-title>
                   <v-card-title style="padding-bottom: 0"
-                    >Receiving day : {{ formatTime(card.date_reciept) }}
+                    >Receiving day : {{ formatTimeReview(card.date_reciept) }}
                   </v-card-title>
                   <v-card-title style="padding-bottom: 0">
                     Amount {{ card.quantity.toLocaleString() }} piece
@@ -118,7 +118,7 @@
                         >Order Date : {{ formatTime(card.date_book) }}
                       </v-card-title>
                       <v-card-title style="padding-bottom: 0"
-                        >Receiving day : {{ formatTime(card.date_reciept) }}
+                        >Receiving day : {{ formatTimeReview(card.date_reciept) }}
                       </v-card-title>
                       <v-card-title style="padding-bottom: 0">
                         Amount
@@ -281,6 +281,17 @@ export default {
           getSeconds(date)
         ).padStart(2, "0")}`;
         return `Date: ${formattedDate} Time: ${formattedTime}`;
+      }
+    },
+    formatTimeReview(timestamp) {
+      if (timestamp === null) {
+        return "Please wait for the day you receive the product.";
+      } else {
+        const date = new Date(timestamp);
+        const formattedDate = `${getDate(date)}/${getMonth(date) + 1}/${getYear(
+          date
+        )}`;
+        return `Date: ${formattedDate}`;
       }
     },
 
