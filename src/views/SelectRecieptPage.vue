@@ -23,7 +23,7 @@
               </v-toolbar>
             </template>
             <template v-slot:[`item.actions`]="{ item }">
-              <v-icon small class="mr-2" @click="openDialog('edit', item)">
+              <v-icon small class="mr-2" @click="openDialog('Add', item)">
                 mdi-pencil
               </v-icon>
               <v-icon small @click="deleteItem(item)" class="ml-2">
@@ -99,18 +99,22 @@ export default {
     this.initialize();
   },
   computed: {
-  filteredUserList() {
-    return this.userList.filter((item) => {
-      return item.productname.toLowerCase().includes(this.searchProduct.toLowerCase());
-    });
+    filteredUserList() {
+      return this.userList.filter((item) => {
+        return item.productname
+          .toLowerCase()
+          .includes(this.searchProduct.toLowerCase());
+      });
+    },
   },
-},
-
 
   methods: {
     formatDate(date) {
-      const options = { year: "numeric", month: "long", day: "numeric" };
-      return new Date(date).toLocaleDateString(undefined, options);
+      if (date) {
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return new Date(date).toLocaleDateString(undefined, options);
+      }
+      return "Not yet paid"; 
     },
     async initialize() {
       this.userList = [];
@@ -131,14 +135,14 @@ export default {
     },
     openDialog(action, item) {
       this.formTitle = action;
-      if (action === "edit") {
+      if (action === "Add") {
         this.dialog = true;
         this.editedItem = Object.assign({}, item);
       }
     },
 
     async save(action) {
-      if (action === "edit") {
+      if (action === "Add") {
         const dateRecieptTimestamp = new Date(
           this.editedItem.date_reciept
         ).toISOString();

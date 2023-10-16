@@ -17,15 +17,13 @@
       >
         <v-card
           class="mx-auto"
-          max-width="344"
+          max-width="1400"
           @click="card.piece !== 0 && navigateToSelectPage(card)"
           :class="{ unavailable: card.piece === 0 }"
         >
-          <v-img :src="getImageUrl(card.photoData)" height="200px"></v-img>
+          <v-img :src="getImageUrl(card.photoData)" height="400px"></v-img>
           <v-card-title>{{ card.productname }}</v-card-title>
-          <v-card-subtitle v-if="card.piece === 0"
-            >Out of Stock</v-card-subtitle
-          >
+          <v-card-subtitle v-if="card.piece === 0">Out of Stock</v-card-subtitle>
         </v-card>
       </v-col>
     </v-row>
@@ -34,11 +32,7 @@
         <v-row justify="center">
           <v-col cols="4">
             <v-container class="max-width">
-              <v-pagination
-                v-model="page"
-                class="my-4"
-                :length="totalPages"
-              ></v-pagination>
+              <v-pagination v-model="page" class="my-4" :length="totalPages"></v-pagination>
             </v-container>
           </v-col>
         </v-row>
@@ -58,14 +52,19 @@ export default {
     return {
       cards: [],
       page: 1,
-      itemsPerPage: 9,
+      itemsPerPage: 9, 
       searchTerm: "",
-      visibleCards: [], 
+      visibleCards: [],
     };
   },
   computed: {
     totalPages() {
-      return Math.ceil(this.cards.length / this.itemsPerPage);
+      return Math.ceil(this.filteredCards.length / this.itemsPerPage);
+    },
+    filteredCards() {
+      return this.cards.filter((card) =>
+        card.productname.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
     },
   },
   methods: {
@@ -73,7 +72,7 @@ export default {
       try {
         const response = await this.axios.get("http://localhost:9009/Product");
         this.cards = response.data;
-        this.filterCards(); 
+        this.filterCards();
       } catch (error) {
         console.error("Error fetching product data:", error);
       }
@@ -87,11 +86,18 @@ export default {
       return `data:image/jpeg;base64,${photoData}`;
     },
     filterCards() {
-      this.visibleCards = this.cards.filter((card) => {
-        return card.productname
-          .toLowerCase()
-          .includes(this.searchTerm.toLowerCase());
-      });
+      const startIndex = (this.page - 1) * this.itemsPerPage;
+      const endIndex = Math.min(startIndex + this.itemsPerPage, this.filteredCards.length);
+      this.visibleCards = this.filteredCards.slice(startIndex, endIndex);
+    },
+  },
+  watch: {
+    searchTerm() { 
+      this.page = 1;
+      this.filterCards();
+    },
+    page(newPage) {
+      this.filterCards();
     },
   },
   created() {

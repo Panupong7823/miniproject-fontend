@@ -268,7 +268,7 @@ export default {
     },
     formatTime(timestamp) {
       if (timestamp === null) {
-        return "Please wait for day you receive product.";
+        return "Please pay for the purchase.";
       } else {
         const date = new Date(timestamp);
         const formattedDate = `${getDate(date)}/${getMonth(date) + 1}/${getYear(

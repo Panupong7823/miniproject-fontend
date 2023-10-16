@@ -5,7 +5,7 @@
         <v-card style="height: 100%; width: 100%">
           <v-card-title
             style="font-size: 40px; text-align: center; justify-content: center"
-            >Register</v-card-title
+            >Payment</v-card-title
           >
           <v-card-text>
             <v-form ref="form">

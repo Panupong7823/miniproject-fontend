@@ -131,9 +131,15 @@ export default {
             `http://localhost:9009/user/${this.user.userID}`,
             userData
           );
+          const Datauser= JSON.parse(localStorage.getItem("auth"));
+          const userType = Datauser.userType;
 
           if (response.status === 200) {
-            this.$router.push("/");
+            if (userType === "1") {
+              this.$router.push("/home");
+            } else if (userType === "0") {
+              this.$router.push("/home/admin");
+            }
           } else {
             this.$toast.error("Update failed. Please try again.");
           }

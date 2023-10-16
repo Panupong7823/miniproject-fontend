@@ -1,23 +1,25 @@
 <template>
-   <v-carousel
+  <v-carousel
     cycle
     height="600px"
-    width="100%"
+    width="20%"
     hide-delimiters
-    show-arrows-on-hover :show-arrows="false"
+    show-arrows-on-hover
+    :show-arrows="false"
   >
     <v-carousel-item
       v-for="(item, i) in products"
       :key="i"
       :src="getImageUrl(item.photoData)"
+      height="600px"
     ></v-carousel-item>
   </v-carousel>
 </template>
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-  data () {
+  data() {
     return {
       products: [],
     };
@@ -28,12 +30,13 @@ export default {
   methods: {
     async Products() {
       try {
-        const response = await axios.get('http://localhost:9009/Product');
+        const response = await axios.get("http://localhost:9009/Product");
         this.products = response.data;
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
       }
-    }, getImageUrl(photoData) {
+    },
+    getImageUrl(photoData) {
       return `data:image/jpeg;base64,${photoData}`;
     },
   },

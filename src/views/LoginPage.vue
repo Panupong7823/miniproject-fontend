@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
 
 export default {
   data: () => ({
@@ -93,7 +94,12 @@ export default {
             console.error("Internal server error.");
           }
         } catch (error) {
-          alert("Incorrect password. Please try again.");
+          Swal.fire({
+            icon: "error",
+            title: "Incorrect Password",
+            showConfirmButton: false,
+            timer: 1500,
+          });
           console.error(error);
         }
       }

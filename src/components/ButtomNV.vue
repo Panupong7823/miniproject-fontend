@@ -55,18 +55,9 @@
         v-if="userType !== '1'"
       >
         <v-icon> mdi-calendar-multiple</v-icon>
-        Schedule 
+        Schedule
       </v-btn>
-      <v-btn
-        block
-        dark
-        class="custom-button"
-        color="dark"
-        @click="handleEditUser"
-      >
-        <v-icon> mdi-account-box-outline</v-icon>
-        edituser
-      </v-btn>
+
       <v-btn
         block
         dark
@@ -89,7 +80,16 @@
         <v-icon>mdi-clipboard-text</v-icon>
         history
       </v-btn>
-
+      <v-btn
+        block
+        dark
+        class="custom-button"
+        color="dark"
+        @click="handleEditUser"
+      >
+        <v-icon> mdi-account-box-outline</v-icon>
+        edituser
+      </v-btn>
       <v-btn
         block
         dark
@@ -135,7 +135,7 @@ export default {
         this.$router.push({ path: "/home/admin" }).catch(() => {});
       }
     },
-      handleReview() {
+    handleReview() {
       if (this.$route.path != "/reciept") {
         this.$router.push({ path: "/reciept" }).catch(() => {});
       }
@@ -154,7 +154,7 @@ export default {
         this.$router.push({ path: `/listpaid/${userId}` }).catch(() => {});
       }
     },
-     handleEditUser() {
+    handleEditUser() {
       const user = JSON.parse(localStorage.getItem("auth"));
       const userId = user.userID;
       if (this.$route.path != `/manage/${userId}`) {

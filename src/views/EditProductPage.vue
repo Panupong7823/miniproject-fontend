@@ -1,6 +1,8 @@
 <template>
   <v-container>
     <v-row>
+      <v-btn class="mr-auto" @click="goBack"> cancle </v-btn>
+      <v-btn class="ml-auto" @click="goDelete"> delete </v-btn>
       <v-col cols="12">
         <v-card style="height: 100%; width: 100%">
           <v-card-title
@@ -8,6 +10,7 @@
           >
             Edit Product
           </v-card-title>
+
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-text-field
@@ -123,6 +126,37 @@ export default {
         console.error(error);
         this.showErrorToast("An error occurred. Please try again later.");
       }
+    },
+    async goDelete() {
+      try {
+        const productid = this.$route.params.productid;
+        const response = await this.axios.delete(
+          `http://localhost:9009/Product/${productid}`
+        );
+
+        if (response.status === 200) {
+          this.$router.push("/home/admin");
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Product deleted successfully",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else if (response.status === 400) {
+          this.showErrorToast("Product Not Found");
+        } else {
+          this.showErrorToast(
+            "Unable to delete the product. Please try again."
+          );
+        }
+      } catch (error) {
+        console.error(error);
+        this.showErrorToast("An error occurred. Please try again later.");
+      }
+    },
+    goBack() {
+      this.$router.push("/home/admin");
     },
     selectPhoto(file) {
       this.product.photo = file;
